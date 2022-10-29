@@ -28,6 +28,10 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(fireblocksclient.APIURLEnv, fireblocksclient.APIURLDefault),
 			},
+			"abi_path": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"fireblocks_vault_account":         vaultAccountResource(),
@@ -54,6 +58,7 @@ func ConfigureProvider() schema.ConfigureContextFunc {
 				APIKey:        data.Get("api_key").(string),
 				RSAPrivateKey: data.Get("rsa_private_key").(string),
 			},
+			ABIPath: data.Get("abi_path").(string),
 		}
 
 		sdk, err := fireblockssdk.New(cfg.SetDefault())
