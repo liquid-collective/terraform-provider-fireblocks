@@ -77,7 +77,7 @@ mockgen: mockgen-install
 	$(GOPATH)/bin/mockgen -source pkg/fireblocks/client/client.go -destination pkg/fireblocks/client/mock/client.go -package mock Client
 
 generate:
-	$(GOPATH)/bin/tfplugindocs generate --provider-name "terraform-provider-fireblocks" --rendered-provider-name "OpenZeppelin Defender" --tf-version "v1.3.1"
+	$(GOPATH)/bin/tfplugindocs generate --provider-name "terraform-provider-fireblocks" --rendered-provider-name "Fireblocks" --tf-version "v1.3.1"
 
 release:
 	goreleaser release --rm-dist --snapshot --skip-publish  --skip-sign
