@@ -215,6 +215,13 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 			return nil
 		}
 
+		// attempt to parse number in base 10
+		res, ok := new(big.Int).SetString(string(input), 10)
+		if ok {
+			*b = (Big)(*res)
+			return nil
+		}
+
 		// attempt to parse duration
 		d, err := time.ParseDuration(string(input))
 		if err == nil {
@@ -228,7 +235,6 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 
 		// attempt to parse time
 		t, err := time.Parse(time.RFC3339, string(input))
-		fmt.Printf("Piou %v\n", err)
 		if err == nil {
 			*b = (Big)(*big.NewInt(t.Unix()))
 			return nil
@@ -244,7 +250,7 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid input")
+	return fmt.Errorf("invalid number %q", string(input))
 }
 
 func isString(input []byte) bool {

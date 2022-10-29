@@ -114,7 +114,6 @@ type ErrorMsg struct {
 }
 
 func (c *Client) doRequest(req *http.Request) (*http.Response, error) {
-	fmt.Printf("Piou doReques %v\n", req.URL.String())
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return resp, err

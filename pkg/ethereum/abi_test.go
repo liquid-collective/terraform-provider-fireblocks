@@ -50,6 +50,15 @@ func TestParseArg(t *testing.T) {
 			expectedResult: new(big.Int).SetInt64(255),
 		},
 		{
+			desc:         "uint256 from string",
+			solidityType: "uint256",
+			arg:          []byte(`"400000000000000000000000000"`),
+			expectedResult: func() *big.Int {
+				res, _ := new(big.Int).SetString("400000000000000000000000000", 10)
+				return res
+			}(),
+		},
+		{
 			desc:           "uint32 from duration",
 			solidityType:   "uint32",
 			arg:            []byte(`"60s"`),
