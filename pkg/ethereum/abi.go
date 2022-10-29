@@ -2,9 +2,11 @@ package ethereum
 
 import (
 	"fmt"
+	"math"
 	"math/big"
 	"os"
 	"reflect"
+	"time"
 
 	"encoding/json"
 
@@ -18,6 +20,14 @@ type ABI struct {
 }
 
 func (a *ABI) PackJSON(name string, args ...[]byte) (string, error) {
+	if method, ok := a.Methods[name]; !ok {
+		return "", fmt.Errorf("method '%s' not found", name)
+	} else {
+		if len(args) != len(method.Inputs) {
+			return "", fmt.Errorf("argument count mismatch: got %d for %d", len(args), len(method.Inputs))
+		}
+	}
+
 	var iArgs []interface{}
 	for i, typ := range a.Methods[name].Inputs { //nolint: gocritic
 		iArg, err := ParseJSONArg(args[i], &typ.Type)
@@ -52,38 +62,68 @@ func LoadABI(file string) (ABI, error) {
 func ParseJSONArg(arg []byte, typ *abi.Type) (interface{}, error) {
 	switch typ.T {
 	case abi.IntTy:
+		bii, err := unmarshalArg(arg, reflect.TypeOf(&Big{}))
+		if err != nil {
+			return nil, err
+		}
+
+		bi := (*big.Int)(bii.(*Big))
+
 		switch typ.Size {
 		case 8:
-			return unmarshalArg(arg, reflect.TypeOf(int8(0)))
-		case 16:
-			return unmarshalArg(arg, reflect.TypeOf(int16(0)))
-		case 32:
-			return unmarshalArg(arg, reflect.TypeOf(int32(0)))
-		case 64:
-			return unmarshalArg(arg, reflect.TypeOf(int64(0)))
-		default:
-			i, err := unmarshalArg(arg, reflect.TypeOf(&hexutil.Big{}))
-			if err != nil {
-				return nil, err
+			if !bi.IsInt64() || bi.Int64() > math.MaxInt8 {
+				return nil, fmt.Errorf("number exceed max value for int8")
 			}
-			return (*big.Int)(i.(*hexutil.Big)), nil
+			return int8(bi.Int64()), nil
+		case 16:
+			if !bi.IsInt64() || bi.Int64() > math.MaxInt16 {
+				return nil, fmt.Errorf("number exceed max value for int16")
+			}
+			return int16(bi.Int64()), nil
+		case 32:
+			if !bi.IsInt64() || bi.Int64() > math.MaxInt32 {
+				return nil, fmt.Errorf("number exceed max value for int32")
+			}
+			return int32(bi.Int64()), nil
+		case 64:
+			if !bi.IsInt64() {
+				return nil, fmt.Errorf("number exceed max value for int64")
+			}
+			return bi.Int64(), nil
+		default:
+			return bi, nil
 		}
 	case abi.UintTy:
+		bii, err := unmarshalArg(arg, reflect.TypeOf(&Big{}))
+		if err != nil {
+			return nil, err
+		}
+
+		bi := (*big.Int)(bii.(*Big))
+
 		switch typ.Size {
 		case 8:
-			return unmarshalArg(arg, reflect.TypeOf(uint8(0)))
-		case 16:
-			return unmarshalArg(arg, reflect.TypeOf(uint16(0)))
-		case 32:
-			return unmarshalArg(arg, reflect.TypeOf(uint32(0)))
-		case 64:
-			return unmarshalArg(arg, reflect.TypeOf(uint64(0)))
-		default:
-			i, err := unmarshalArg(arg, reflect.TypeOf(&hexutil.Big{}))
-			if err != nil {
-				return nil, err
+			if !bi.IsUint64() || bi.Uint64() > math.MaxUint8 {
+				return nil, fmt.Errorf("number exceed max value for uint8")
 			}
-			return (*big.Int)(i.(*hexutil.Big)), nil
+			return uint8(bi.Uint64()), nil
+		case 16:
+			if !bi.IsUint64() || bi.Uint64() > math.MaxUint16 {
+				return nil, fmt.Errorf("number exceed max value for uint16")
+			}
+			return uint16(bi.Uint64()), nil
+		case 32:
+			if !bi.IsUint64() || bi.Uint64() > math.MaxUint32 {
+				return nil, fmt.Errorf("number exceed max value for uint32")
+			}
+			return uint32(bi.Uint64()), nil
+		case 64:
+			if !bi.IsUint64() || bi.Uint64() > math.MaxUint64 {
+				return nil, fmt.Errorf("number exceed max value for uint64")
+			}
+			return uint64(bi.Uint64()), nil
+		default:
+			return bi, nil
 		}
 	case abi.BoolTy:
 		return unmarshalArg(arg, reflect.TypeOf(false))
@@ -156,4 +196,61 @@ func unmarshalArg(arg []byte, typ reflect.Type) (interface{}, error) {
 	}
 
 	return argV.Elem().Interface(), nil
+}
+
+type Big big.Int
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (b *Big) UnmarshalJSON(input []byte) error {
+	if isString(input) {
+		input = input[1 : len(input)-1]
+		if has0xPrefix(input) {
+			//  attempt to parse as hex
+			hex := new(hexutil.Big)
+			err := hex.UnmarshalText(input)
+			if err != nil {
+				return err
+			}
+			*b = (Big)(big.Int(*hex))
+			return nil
+		}
+
+		// attempt to parse duration
+		d, err := time.ParseDuration(string(input))
+		if err == nil {
+			roundD := d.Round(time.Second)
+			if d != roundD {
+				return fmt.Errorf("invalid duration %s (second precision)", string(input))
+			}
+			*b = (Big)(*big.NewInt(int64(roundD) / 1e9))
+			return nil
+		}
+
+		// attempt to parse time
+		t, err := time.Parse(time.RFC3339, string(input))
+		fmt.Printf("Piou %v\n", err)
+		if err == nil {
+			*b = (Big)(*big.NewInt(t.Unix()))
+			return nil
+		}
+
+		return fmt.Errorf("invalid number string representation %q", string(input))
+	}
+
+	// attempt to parse number in base 10
+	bi, ok := new(big.Int).SetString(string(input), 10)
+	if ok {
+		*b = (Big)(*bi)
+		return nil
+	}
+
+	return fmt.Errorf("invalid input")
+}
+
+func isString(input []byte) bool {
+	return len(input) >= 2 && input[0] == '"' && input[len(input)-1] == '"'
+}
+
+func has0xPrefix(input []byte) bool {
+	return len(input) >= 2 && input[0] == '0' && (input[1] == 'x' || input[1] == 'X')
 }

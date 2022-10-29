@@ -12,7 +12,7 @@ import (
 )
 
 func TestABI(t *testing.T) {
-	a, err := LoadABI("testdata/TLC.json")
+	a, err := LoadABI("testdata/ERC20.json")
 	require.NoError(t, err)
 	payload, err := a.PackJSON(
 		"transfer",
@@ -38,10 +38,28 @@ func TestParseArg(t *testing.T) {
 			expectedResult: uint32(1234),
 		},
 		{
+			desc:           "uint8",
+			solidityType:   "uint8",
+			arg:            []byte(`"0xff"`),
+			expectedResult: uint8(255),
+		},
+		{
 			desc:           "uint256",
 			solidityType:   "uint256",
-			arg:            []byte("\"0xff\""),
+			arg:            []byte(`"0xff"`),
 			expectedResult: new(big.Int).SetInt64(255),
+		},
+		{
+			desc:           "uint32 from duration",
+			solidityType:   "uint32",
+			arg:            []byte(`"60s"`),
+			expectedResult: uint32(60),
+		},
+		{
+			desc:           "uint64 from time",
+			solidityType:   "uint64",
+			arg:            []byte(`"2022-10-29T16:10:03Z"`),
+			expectedResult: uint64(1667059803),
 		},
 		{
 			desc:           "bool",
@@ -67,6 +85,7 @@ func TestParseArg(t *testing.T) {
 			arg:            []byte("\"0x2B7ff5d4C14A9Da8d5C9354c7A52aB40DdC1C01e\""),
 			expectedResult: hexutil.MustDecode("0x2B7ff5d4C14A9Da8d5C9354c7A52aB40DdC1C01e"),
 		},
+
 		{
 			desc:           "int64[]",
 			solidityType:   "int64[]",
