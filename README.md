@@ -1,4 +1,4 @@
-# Terraform Provider OpenZeppelin Defender
+# Terraform Provider Fireblocks
 
 [![GoDoc](https://pkg.go.dev/badge/github.com/liquid-collective/terraform-provider-fireblocks.svg)](https://pkg.go.dev/github.com/liquid-collective/terraform-provider-fireblocks)
 [![Go Report Card](https://goreportcard.com/badge/github.com/liquid-collective/terraform-provider-fireblocks)](https://goreportcard.com/report/github.com/liquid-collective/terraform-provider-fireblocks)
