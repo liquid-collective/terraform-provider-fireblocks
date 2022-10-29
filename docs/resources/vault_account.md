@@ -3,12 +3,12 @@
 page_title: "fireblocks_vault_account Resource - terraform-provider-fireblocks"
 subcategory: ""
 description: |-
-  
+  Resource is used to manage Fireblocks vault accounts.
 ---
 
 # fireblocks_vault_account (Resource)
 
-
+Resource is used to manage Fireblocks vault accounts.
 
 
 

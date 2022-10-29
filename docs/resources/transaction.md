@@ -3,12 +3,12 @@
 page_title: "fireblocks_transaction Resource - terraform-provider-fireblocks"
 subcategory: ""
 description: |-
-  
+  Resource is used to manage Fireblocks transactions.
 ---
 
 # fireblocks_transaction (Resource)
 
-
+Resource is used to manage Fireblocks transactions.
 
 
 

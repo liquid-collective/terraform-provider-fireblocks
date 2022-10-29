@@ -21,7 +21,7 @@ func externalWalletAssetResource() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Description: ``,
+		Description: `Resource is used to manage Fireblocks external wallet assets.`,
 		Schema: map[string]*schema.Schema{
 			"external_wallet_id": {
 				Type:        schema.TypeString,

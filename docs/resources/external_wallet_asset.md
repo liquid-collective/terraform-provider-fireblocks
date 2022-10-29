@@ -3,12 +3,12 @@
 page_title: "fireblocks_external_wallet_asset Resource - terraform-provider-fireblocks"
 subcategory: ""
 description: |-
-  
+  Resource is used to manage Fireblocks external wallet assets.
 ---
 
 # fireblocks_external_wallet_asset (Resource)
 
-
+Resource is used to manage Fireblocks external wallet assets.
 
 
 

@@ -16,7 +16,7 @@ func transactionResource() *schema.Resource {
 		ReadContext:   transactionRead,
 		UpdateContext: transactionUpdate,
 		DeleteContext: transactionDelete,
-		Description:   ``,
+		Description:   `Resource is used to manage Fireblocks transactions.`,
 		Schema: map[string]*schema.Schema{
 			"asset_id": {
 				Type:        schema.TypeString,

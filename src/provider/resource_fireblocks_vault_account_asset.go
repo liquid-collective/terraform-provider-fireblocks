@@ -20,7 +20,7 @@ func vaultAccountAssetResource() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Description: ``,
+		Description: `Resource is used to manage Fireblocks vault account assets.`,
 		Schema: map[string]*schema.Schema{
 			"vault_account_id": {
 				Type:        schema.TypeString,

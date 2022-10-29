@@ -19,8 +19,7 @@ func externalWalletResource() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		Description: `Resource is used to managed Defender Admin action proposals. 
-Any actions created this way will have no approvals initially.`,
+		Description: `Resource is used to manage Fireblocks external wallets.`,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
