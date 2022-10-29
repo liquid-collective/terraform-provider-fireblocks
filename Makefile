@@ -1,9 +1,8 @@
-TEST?=$$(go list ./... | grep -v 'vendor')
 HOSTNAME=liquidcollective.io
 NAMESPACE=dev
 NAME=fireblocks
-BINARY=terraform-provider-${NAME}
-VERSION=0.1.28
+BINARY=$(BUILD_FOLDER)/terraform-provider-${NAME}
+VERSION=0.1.31
 
 OS_ARCH=darwin_arm64
 
@@ -83,10 +82,10 @@ generate:
 release:
 	goreleaser release --rm-dist --snapshot --skip-publish  --skip-sign
 
-build:
+go-build:
 	go build -o ${BINARY}
 
-install: build
+install: go-build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
@@ -98,6 +97,3 @@ plan:
 
 apply:
 	cd examples && terraform apply -auto-approve
-
-import:
-	cd examples && terraform import fireblocks_vault_account_asset.tlc-treasury-dev-goerli "2:ETH_TEST3"
