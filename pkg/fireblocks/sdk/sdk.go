@@ -12,7 +12,7 @@ import (
 type SDK struct {
 	fireblocksclient.Client
 	cfg *Config
-	abi ethereum.ABI
+	ABI ethereum.ABI
 }
 
 func New(cfg *Config) (*SDK, error) {
@@ -33,7 +33,7 @@ func (sdk *SDK) Init(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		sdk.abi = abi
+		sdk.ABI = abi
 	}
 
 	if init, ok := sdk.Client.(kilnapp.Initializable); ok {

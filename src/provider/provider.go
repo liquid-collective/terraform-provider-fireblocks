@@ -36,6 +36,9 @@ func Provider() *schema.Provider {
 			"fireblocks_external_wallet_asset": externalWalletAssetResource(),
 			"fireblocks_transaction":           transactionResource(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"fireblocks_ethereum_encode": ethereumEncodeDataSource(),
+		},
 	}
 
 	provider.ConfigureContextFunc = ConfigureProvider()
