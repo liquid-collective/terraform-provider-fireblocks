@@ -22,10 +22,8 @@ type ABI struct {
 func (a *ABI) PackJSON(name string, args ...[]byte) (string, error) {
 	if method, ok := a.Methods[name]; !ok {
 		return "", fmt.Errorf("method '%s' not found", name)
-	} else {
-		if len(args) != len(method.Inputs) {
-			return "", fmt.Errorf("argument count mismatch: got %d for %d", len(args), len(method.Inputs))
-		}
+	} else if len(args) != len(method.Inputs) {
+		return "", fmt.Errorf("argument count mismatch: got %d for %d", len(args), len(method.Inputs))
 	}
 
 	var iArgs []interface{}
@@ -118,10 +116,10 @@ func ParseJSONArg(arg []byte, typ *abi.Type) (interface{}, error) {
 			}
 			return uint32(bi.Uint64()), nil
 		case 64:
-			if !bi.IsUint64() || bi.Uint64() > math.MaxUint64 {
+			if !bi.IsUint64() {
 				return nil, fmt.Errorf("number exceed max value for uint64")
 			}
-			return uint64(bi.Uint64()), nil
+			return bi.Uint64(), nil
 		default:
 			return bi, nil
 		}
@@ -211,14 +209,14 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 			if err != nil {
 				return err
 			}
-			*b = (Big)(big.Int(*hex))
+			*b = Big(big.Int(*hex))
 			return nil
 		}
 
 		// attempt to parse number in base 10
 		res, ok := new(big.Int).SetString(string(input), 10)
 		if ok {
-			*b = (Big)(*res)
+			*b = Big(*res)
 			return nil
 		}
 
@@ -229,14 +227,14 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 			if d != roundD {
 				return fmt.Errorf("invalid duration %s (second precision)", string(input))
 			}
-			*b = (Big)(*big.NewInt(int64(roundD) / 1e9))
+			*b = Big(*big.NewInt(int64(roundD) / 1e9))
 			return nil
 		}
 
 		// attempt to parse time
 		t, err := time.Parse(time.RFC3339, string(input))
 		if err == nil {
-			*b = (Big)(*big.NewInt(t.Unix()))
+			*b = Big(*big.NewInt(t.Unix()))
 			return nil
 		}
 
@@ -246,7 +244,7 @@ func (b *Big) UnmarshalJSON(input []byte) error {
 	// attempt to parse number in base 10
 	bi, ok := new(big.Int).SetString(string(input), 10)
 	if ok {
-		*b = (Big)(*bi)
+		*b = Big(*bi)
 		return nil
 	}
 

@@ -13,6 +13,7 @@ import (
 
 func testProviders(t *testing.T, client fireblocksclient.Client) map[string]func() (*schema.Provider, error) {
 	return map[string]func() (*schema.Provider, error){
+		//nolint:unparam // should not report for function always returning nil error while matching signature
 		"fireblocks": func() (*schema.Provider, error) {
 			t.Setenv("FIREBLOCKS_API_KEY", "test-api-key")
 			t.Setenv("FIREBLOCKS_RSA_PRIVATE_KEY", "test-api-secret")
