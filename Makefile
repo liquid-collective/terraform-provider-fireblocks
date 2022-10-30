@@ -27,7 +27,7 @@ INTEGRATION_COVERAGE_OUT = $(COVERAGE_BUILD_FOLDER)/it_cov.out
 INTEGRATION_COVERAGE_HTML =$(COVERAGE_BUILD_FOLDER)/it_index.html
 
 # Test lint variables
-GOLANGCI_VERSION = v1.46.2
+GOLANGCI_VERSION = v1.50.1
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)

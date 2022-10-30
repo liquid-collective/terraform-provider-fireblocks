@@ -65,5 +65,5 @@ jobs:
         uses: actions/checkout@v2
       - uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.46.2
+          version: v1.50.1
           args: -c .golangci.yml --allow-parallel-runners
