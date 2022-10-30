@@ -65,7 +65,7 @@ fix-lint: ## Run linter to fix issues
 
 # @misspell -error $(GOFILES)
 test-lint: ## Check linting
-	docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:$(GOLANGCI_VERSION) golangci-lint run -v
+	docker run --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:$(GOLANGCI_VERSION) golangci-lint run -v --out-format=github-actions -c .golangci.yml --allow-parallel-runners
 
 mockgen-install:
 	@type mockgen >/dev/null 2>&1 || {   \
