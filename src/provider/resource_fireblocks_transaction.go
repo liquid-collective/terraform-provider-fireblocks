@@ -137,7 +137,9 @@ func transactionResource() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "Signers of the transaction",
-				Elem:        schema.TypeString,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"created_by": {
 				Type:        schema.TypeString,
