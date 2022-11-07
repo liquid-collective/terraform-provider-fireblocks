@@ -57,7 +57,7 @@ $ terraform init
 
 | **API object**        | **Terraform Method** | **Supported**      | **Comment**                                                                                                   |
 |-----------------------|----------------------|--------------------|---------------------------------------------------------------------------------------------------------------|
-| Vault Account         | Create               | :green_circle:     | Some Fireblocks API parameters are not supported yet                                                          |
+| Vault Account         | Create               | :green_circle:     |                                                                                                               |
 | Vault Account         | Update               | :green_circle:     | Vault account can be renamed and hidden from console                                                          |
 | Vault Account         | Delete               | :orange_circle:    | Fireblocks API does not allow to archive vault account (while it is possible on the Fireblocks console)       |
 | Vault Account         | Import               | :green_circle:     |                                                                                                               |
@@ -73,7 +73,7 @@ $ terraform init
 | External Wallet Asset | Update               | :heavy_minus_sign: | Fireblocks API does not allow to update External Wallet Asset                                                 |
 | External Wallet Asset | Delete               | :green_circle:     |                                                                                                               |
 | External Wallet Asset | Import               | :green_circle:     |                                                                                                               |
-| Transaction           | Create               | :green_circle:     |                                                                                                               |
+| Transaction           | Create               | :green_circle:     |   Some Fireblocks API parameters are not supported yet                                                        |
 | Transaction           | Udpate               | :heavy_minus_sign: | Fireblocks API does not allow to update Transaction                                                           |
 | Transaction           | Delete               | :green_circle:     |                                                                                                               |
 | Transaction           | Import               | :green_circle:     |                                                                                                               |
