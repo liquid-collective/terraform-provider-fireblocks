@@ -59,6 +59,7 @@ func transactionResource() *schema.Resource {
 			"amount": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     "0",
 				Description: "If the transfer is a withdrawal from an exchange, the actual amount that was requested to be transferred. Otherwise, the requested amount",
 			},
 			"gas_price": {
