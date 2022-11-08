@@ -3,7 +3,7 @@ module github.com/liquid-collective/terraform-provider-fireblocks
 go 1.18
 
 require (
-	github.com/ethereum/go-ethereum v1.10.25
+	github.com/ethereum/go-ethereum v1.10.26
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/mock v1.6.0
 	github.com/hashicorp/go-uuid v1.0.3
